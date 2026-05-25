@@ -2,15 +2,29 @@ import type { ChatResponse, DocumentItem } from "../types/api";
 
 const API_BASE = import.meta.env.VITE_API_BASE ?? "";
 
+interface ApiResponse<T> {
+  success: boolean;
+  code: string;
+  message: string;
+  data: T;
+}
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, init);
+  const contentType = response.headers.get("content-type") ?? "";
 
-  if (!response.ok) {
+  if (!contentType.includes("application/json")) {
     const message = await response.text();
     throw new Error(message || `Request failed: ${response.status}`);
   }
 
-  return response.json() as Promise<T>;
+  const payload = (await response.json()) as ApiResponse<T>;
+
+  if (!response.ok || !payload.success) {
+    throw new Error(payload.message || `Request failed: ${response.status}`);
+  }
+
+  return payload.data;
 }
 
 export async function listDocuments(): Promise<DocumentItem[]> {

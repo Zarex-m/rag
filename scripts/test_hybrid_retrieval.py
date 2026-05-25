@@ -3,7 +3,7 @@ import asyncio
 from app.rag.hybrid_retriever import hybrid_retrieve
 
 
-async def main():
+async def main() -> None:
     docs = await hybrid_retrieve("二维随机变量", top_k=5)
 
     print("retrieved:", len(docs))
@@ -17,4 +17,5 @@ async def main():
         print(doc.page_content[:300])
 
 
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())

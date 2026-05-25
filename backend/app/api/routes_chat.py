@@ -2,7 +2,7 @@
 from fastapi import APIRouter
 from pydantic import BaseModel, Field
 from app.services.chat_service import answer_question
-
+from app.core.responses import ok
 router=APIRouter()
 
 class ChatRequest(BaseModel):
@@ -11,7 +11,8 @@ class ChatRequest(BaseModel):
     
 @router.post("")
 async def chat(request:ChatRequest)->dict:
-    return await answer_question(
+    result= await answer_question(
         question=request.question,
         top_k=request.top_k
     )
+    return ok(data=result)
