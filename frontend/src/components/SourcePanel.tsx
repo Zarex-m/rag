@@ -7,6 +7,7 @@ interface SourcePanelProps {
 
 export function SourcePanel({ result }: SourcePanelProps) {
   const latency = result?.retrieval.latency_ms ?? result?.retrieval.retrieval_time_ms;
+  const queryRewrite = result?.retrieval.query_rewrite;
   const strategyLabel =
     result?.retrieval.retrieval_strategy === "hybrid_rerank"
       ? "hybrid+rerank"
@@ -36,6 +37,22 @@ export function SourcePanel({ result }: SourcePanelProps) {
             <div>
               <span>耗时</span>
               <strong>{latency ? `${latency} ms` : "-"}</strong>
+            </div>
+            <div>
+              <span>召回</span>
+              <strong>{result.retrieval.retrieved_count ?? "-"}</strong>
+            </div>
+            <div>
+              <span>上下文</span>
+              <strong>{result.retrieval.context_count ?? result.sources.length}</strong>
+            </div>
+            <div>
+              <span>扩展窗口</span>
+              <strong>{result.retrieval.neighbor_window ?? "-"}</strong>
+            </div>
+            <div className="retrieval-query">
+              <span>改写 Query</span>
+              <strong title={queryRewrite ?? ""}>{queryRewrite ?? "-"}</strong>
             </div>
           </div>
 

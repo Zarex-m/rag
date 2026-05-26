@@ -26,6 +26,11 @@ export interface RetrievalInfo {
   retrieval_time_ms?: number;
   top_k: number;
   retrieval_strategy?: RetrievalStrategy;
+  retrieved_count?: number;
+  context_count?: number;
+  neighbor_window?: number;
+  max_context_documents?: number;
+  expansion_seed_count?: number;
 }
 
 export interface ChatResponse {

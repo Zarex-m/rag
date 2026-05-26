@@ -13,6 +13,9 @@ async def answer_question(
     retrieval_strategy: str = "hybrid_rerank",
     )->dict:
     start_time=time.perf_counter()
+    neighbor_window = 1
+    max_context_documents = 8
+    expansion_seed_count = 2
     
     #检索前，对问题进行重写
     try:
@@ -60,14 +63,21 @@ async def answer_question(
             "retrieval_time_ms": latency_ms,
             "query_rewrite": rewrite_question,
             "retrieval_strategy": retrieval_strategy,
+            "retrieved_count": 0,
+            "context_count": 0,
+            "neighbor_window": neighbor_window,
+            "max_context_documents": max_context_documents,
+            "expansion_seed_count": expansion_seed_count,
         },
     }
+    retrieved_count = len(docs)
     #拓展chunk
     docs = expand_with_neighbors(
-        docs[:2],
-        window=1,
-        max_documents=8,
+        docs[:expansion_seed_count],
+        window=neighbor_window,
+        max_documents=max_context_documents,
     )
+    context_count = len(docs)
     #把检索到的文档列表进行格式化，得到一个字符串形式的上下文
     context=format_context(docs)
     sources=build_sources(docs)
@@ -98,5 +108,10 @@ async def answer_question(
             "retrieval_time_ms":latency_ms,
             "query_rewrite":rewrite_question,
             "retrieval_strategy": retrieval_strategy,
+            "retrieved_count": retrieved_count,
+            "context_count": context_count,
+            "neighbor_window": neighbor_window,
+            "max_context_documents": max_context_documents,
+            "expansion_seed_count": expansion_seed_count,
         }
     }

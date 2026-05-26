@@ -19,8 +19,15 @@ class SourceChunk(BaseModel):
 
 class RetrievalInfo(BaseModel):
     query_rewrite: str | None = None
-    latency_ms: int
+    latency_ms: int | None = None
+    retrieval_time_ms: int | None = None
     top_k: int
+    retrieval_strategy: str | None = None
+    retrieved_count: int | None = None
+    context_count: int | None = None
+    neighbor_window: int | None = None
+    max_context_documents: int | None = None
+    expansion_seed_count: int | None = None
 
 
 class ChatResponse(BaseModel):
