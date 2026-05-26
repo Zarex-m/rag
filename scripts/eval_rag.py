@@ -96,7 +96,7 @@ async def main() -> None:
     parser.add_argument(
     "--retrieval",
     default="hybrid",
-    choices=["similarity", "mmr", "hybrid"],
+    choices=["similarity", "mmr", "hybrid", "hybrid_rerank"]
 )
     #解析命令行参数，得到一个args对象，里面就有了input、output和top_k的属性，可以在代码里使用它们。
     args = parser.parse_args()
@@ -129,6 +129,7 @@ async def main() -> None:
     print(f"total: {total}")
     print(f"answer_keyword_hit_rate: {answer_hits / total:.2%}")
     print(f"source_keyword_hit_rate: {source_hits / total:.2%}")
+    print(f"source_file_hit_rate: {source_file_hits / total:.2%}")
     print(f"avg_latency_ms: {avg_latency:.0f}")
     print(f"output: {output_path}")
     print(f"retrieval_strategy: {args.retrieval}")

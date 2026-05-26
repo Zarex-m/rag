@@ -7,6 +7,10 @@ interface SourcePanelProps {
 
 export function SourcePanel({ result }: SourcePanelProps) {
   const latency = result?.retrieval.latency_ms ?? result?.retrieval.retrieval_time_ms;
+  const strategyLabel =
+    result?.retrieval.retrieval_strategy === "hybrid_rerank"
+      ? "hybrid+rerank"
+      : result?.retrieval.retrieval_strategy;
 
   return (
     <aside className="source-panel">
@@ -21,6 +25,10 @@ export function SourcePanel({ result }: SourcePanelProps) {
       {result ? (
         <>
           <div className="retrieval-box">
+            <div>
+              <span>策略</span>
+              <strong>{strategyLabel ?? "hybrid"}</strong>
+            </div>
             <div>
               <span>Top K</span>
               <strong>{result.retrieval.top_k}</strong>

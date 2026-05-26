@@ -26,6 +26,7 @@ def build_sources(document:list[Document])->list[dict]:
             "source":source,
             "title":title,
             "page":doc.metadata.get("page"),
-            "content":doc.page_content[:500]
+            "content":doc.page_content[:500],
+            "score":doc.metadata.get("reranker_score") or doc.metadata.get("rrf_score"),
         })    
     return sources

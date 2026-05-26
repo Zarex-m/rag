@@ -1,14 +1,16 @@
 import { ArrowUp, FileSearch, Loader2, Plus, Sparkles } from "lucide-react";
 import type { ChangeEvent, FormEvent, KeyboardEvent } from "react";
-import type { ChatMessage } from "../types/api";
+import type { ChatMessage, RetrievalStrategy } from "../types/api";
 
 interface ChatPanelProps {
   messages: ChatMessage[];
   question: string;
   isLoading: boolean;
   isUploading: boolean;
+  retrievalStrategy: RetrievalStrategy;
   error: string | null;
   onQuestionChange: (value: string) => void;
+  onRetrievalStrategyChange: (value: RetrievalStrategy) => void;
   onUpload: (file: File) => void;
   onSubmit: () => void;
 }
@@ -18,8 +20,10 @@ export function ChatPanel({
   question,
   isLoading,
   isUploading,
+  retrievalStrategy,
   error,
   onQuestionChange,
+  onRetrievalStrategyChange,
   onUpload,
   onSubmit
 }: ChatPanelProps) {
@@ -100,6 +104,19 @@ export function ChatPanel({
 
       <footer className="composer-zone">
         {error && <div className="error-banner">{error}</div>}
+        <div className="retrieval-switcher" aria-label="检索策略">
+          {(["similarity", "mmr", "hybrid", "hybrid_rerank"] as const).map((strategy) => (
+            <button
+              className={retrievalStrategy === strategy ? "active" : ""}
+              disabled={isLoading}
+              key={strategy}
+              onClick={() => onRetrievalStrategyChange(strategy)}
+              type="button"
+            >
+              {strategy === "hybrid_rerank" ? "hybrid+rerank" : strategy}
+            </button>
+          ))}
+        </div>
         <form className="composer" onSubmit={handleSubmit}>
           <label className={`composer-tool ${isUploading ? "loading" : ""}`} title="添加资料">
             <Plus size={21} />

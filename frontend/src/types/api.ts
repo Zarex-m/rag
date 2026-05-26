@@ -1,4 +1,5 @@
 export type DocumentStatus = "uploaded" | "processing" | "indexed" | "failed";
+export type RetrievalStrategy = "similarity" | "mmr" | "hybrid" | "hybrid_rerank";
 
 export interface DocumentItem {
   document_id: string;
@@ -24,6 +25,7 @@ export interface RetrievalInfo {
   latency_ms?: number;
   retrieval_time_ms?: number;
   top_k: number;
+  retrieval_strategy?: RetrievalStrategy;
 }
 
 export interface ChatResponse {

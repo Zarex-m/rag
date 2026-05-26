@@ -3,7 +3,7 @@ import { askQuestion, deleteDocument, listDocuments, uploadDocument } from "../a
 import { ChatPanel } from "../components/ChatPanel";
 import { DocumentPanel } from "../components/DocumentPanel";
 import { SourcePanel } from "../components/SourcePanel";
-import type { ChatMessage, ChatResponse, DocumentItem } from "../types/api";
+import type { ChatMessage, ChatResponse, DocumentItem, RetrievalStrategy } from "../types/api";
 
 export function App() {
   const [documents, setDocuments] = useState<DocumentItem[]>([]);
@@ -17,6 +17,7 @@ export function App() {
   const [question, setQuestion] = useState("");
   const [sessionId, setSessionId] = useState<string | undefined>();
   const [latestResult, setLatestResult] = useState<ChatResponse | null>(null);
+  const [retrievalStrategy, setRetrievalStrategy] = useState<RetrievalStrategy>("hybrid");
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [deletingDocumentId, setDeletingDocumentId] = useState<string | null>(null);
@@ -89,7 +90,11 @@ export function App() {
     setError(null);
 
     try {
-      const result = await askQuestion({ question: trimmed, sessionId });
+      const result = await askQuestion({
+        question: trimmed,
+        sessionId,
+        retrievalStrategy
+      });
       setSessionId(result.session_id);
       setLatestResult(result);
       setMessages((current) => [
@@ -130,8 +135,10 @@ export function App() {
         question={question}
         isLoading={isLoading}
         isUploading={isUploading}
+        retrievalStrategy={retrievalStrategy}
         error={error}
         onQuestionChange={setQuestion}
+        onRetrievalStrategyChange={setRetrievalStrategy}
         onUpload={handleUpload}
         onSubmit={handleSubmit}
       />

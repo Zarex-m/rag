@@ -23,7 +23,7 @@ async def upload_document(file:UploadFile)->dict:
     })
 
 @router.get("")
-async def list_documents()->list[dict]:
+async def list_documents()->dict:
     return ok(data=list_uploaded_documents())
 
 

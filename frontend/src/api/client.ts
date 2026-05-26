@@ -1,4 +1,4 @@
-import type { ChatResponse, DocumentItem } from "../types/api";
+import type { ChatResponse, DocumentItem, RetrievalStrategy } from "../types/api";
 
 const API_BASE = import.meta.env.VITE_API_BASE ?? "";
 
@@ -51,6 +51,7 @@ export async function askQuestion(params: {
   question: string;
   sessionId?: string;
   topK?: number;
+  retrievalStrategy?: RetrievalStrategy;
 }): Promise<ChatResponse> {
   return request<ChatResponse>("/api/chat", {
     method: "POST",
@@ -60,7 +61,8 @@ export async function askQuestion(params: {
     body: JSON.stringify({
       question: params.question,
       session_id: params.sessionId,
-      top_k: params.topK ?? 5
+      top_k: params.topK ?? 5,
+      retrieval_strategy: params.retrievalStrategy ?? "hybrid"
     })
   });
 }

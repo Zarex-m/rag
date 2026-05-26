@@ -540,6 +540,42 @@ button {
   z-index: 1;
 }
 
+.retrieval-switcher {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid #e8e8e8;
+  border-radius: 999px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.045);
+  display: flex;
+  gap: 4px;
+  margin: 0 auto 10px;
+  max-width: max-content;
+  padding: 4px;
+  position: relative;
+  z-index: 1;
+}
+
+.retrieval-switcher button {
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  color: #777777;
+  cursor: pointer;
+  font-size: 13px;
+  height: 30px;
+  padding: 0 12px;
+}
+
+.retrieval-switcher button.active {
+  background: #111111;
+  color: #ffffff;
+}
+
+.retrieval-switcher button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
 .source-panel {
   background: rgba(251, 251, 251, 0.88);
   border-left: 1px solid #e9e9e9;
@@ -574,7 +610,7 @@ button {
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.045);
   display: grid;
   gap: 10px;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   margin-bottom: 16px;
   padding: 14px;
 }
@@ -592,6 +628,9 @@ button {
 
 .retrieval-box strong {
   font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .source-list {

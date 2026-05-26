@@ -1,6 +1,7 @@
 from langchain_core.documents import Document
 from app.rag.bm25_retriever import build_bm25_retriever
 from app.rag.retrievers import build_retriever
+from app.rag.reranker import rerank_documents
 
 #给一个Docuemnt生成唯一标识
 def get_document_key(document: Document) -> str:
@@ -76,7 +77,11 @@ def rrf_fusion(
     return results
 
 # 混合检索：向量检索 + BM25 关键词检索 + RRF 融合
-async def hybrid_retrieve(query: str, top_k: int = 5) -> list[Document]:
+async def hybrid_retrieve(
+    query: str,
+    top_k: int = 5,
+    use_reranker: bool = False,
+) -> list[Document]:
     # 构建向量检索器
     # 这里用 MMR，让语义检索结果尽量兼顾相关性和多样性
     # 先多取一些候选，后面再融合筛选
@@ -98,10 +103,15 @@ async def hybrid_retrieve(query: str, top_k: int = 5) -> list[Document]:
         query,
         top_k=max(top_k * 2, 10),
     )
-
+    fused_top_k = max(top_k * 2, 10) if use_reranker else top_k
     # 把向量检索结果和 BM25 检索结果用 RRF 融合
     # 最终只返回 top_k 条
-    return rrf_fusion(
+    fused_docs = rrf_fusion(
         ranked_lists=[vector_docs, bm25_docs],
-        top_k=top_k,
+        top_k=fused_top_k,
     )
+
+    if not use_reranker:
+        return fused_docs
+
+    return rerank_documents(query, fused_docs, top_k=top_k)
