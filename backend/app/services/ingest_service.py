@@ -28,7 +28,9 @@ async def ingest_document(file_path:str,document_id:str)->dict:
         chunk.metadata["chunk_id"] = f"{document_id}-chunk-{index}"
         chunk.metadata["source"] = str(path)
         chunk.metadata["chunk_index"] = index
-
+        chunk.metadata["filename"] = path.name
+        chunk.metadata["chapter"] = extract_chapter(path.name)
+        chunk.metadata["content_length"] = len(chunk.page_content)
         cleaned_chunks.append(chunk)
     
     vectorstore=build_vectorstore()
@@ -77,3 +79,9 @@ async def rebuild_index()->dict:
         "total_chunks":total_chunks,
         "errors":errors
     }
+
+def extract_chapter(filename: str) -> str | None:
+    name = filename.rsplit(".", 1)[0]
+    if "章" in name:
+        return name
+    return None
