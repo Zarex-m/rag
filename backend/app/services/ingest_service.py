@@ -8,6 +8,7 @@ from app.rag.chunk_store import save_chunks
 from app.rag.chunk_store import clear_chunks
 from app.rag.vectorstore import clear_vectorstore
 from app.services.document_service import list_raw_document_files
+from app.rag.text_cleaner import clean_text,is_valid_chunk
 
 async def ingest_document(file_path:str,document_id:str)->dict:
     path=Path(file_path)
@@ -20,7 +21,7 @@ async def ingest_document(file_path:str,document_id:str)->dict:
     for index, chunk in enumerate(chunks):
         chunk.page_content = clean_text(chunk.page_content)
 
-        if not chunk.page_content.strip():
+        if not is_valid_chunk(chunk.page_content):
             continue
 
         chunk.metadata["document_id"] = document_id
@@ -42,8 +43,6 @@ async def ingest_document(file_path:str,document_id:str)->dict:
         "vector_ids":ids
     }
 
-def clean_text(text:str)->str:
-    return text.encode("utf-8",errors="ignore").decode("utf-8")
 
 
 async def rebuild_index()->dict:
