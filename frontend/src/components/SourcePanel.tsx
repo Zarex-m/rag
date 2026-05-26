@@ -27,7 +27,7 @@ export function SourcePanel({ result }: SourcePanelProps) {
           <div className="retrieval-box">
             <div>
               <span>策略</span>
-              <strong>{strategyLabel ?? "hybrid"}</strong>
+              <strong>{strategyLabel ?? "hybrid+rerank"}</strong>
             </div>
             <div>
               <span>Top K</span>

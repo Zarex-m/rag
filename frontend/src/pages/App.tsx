@@ -17,7 +17,7 @@ export function App() {
   const [question, setQuestion] = useState("");
   const [sessionId, setSessionId] = useState<string | undefined>();
   const [latestResult, setLatestResult] = useState<ChatResponse | null>(null);
-  const [retrievalStrategy, setRetrievalStrategy] = useState<RetrievalStrategy>("hybrid");
+  const [retrievalStrategy, setRetrievalStrategy] = useState<RetrievalStrategy>("hybrid_rerank");
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [deletingDocumentId, setDeletingDocumentId] = useState<string | null>(null);

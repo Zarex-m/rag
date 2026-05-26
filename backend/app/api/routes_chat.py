@@ -15,7 +15,7 @@ class ChatRequest(BaseModel):
     "mmr",
     "hybrid",
     "hybrid_rerank",
-] = "hybrid"
+] = "hybrid_rerank"
     
 @router.post("")
 async def chat(request:ChatRequest)->dict:

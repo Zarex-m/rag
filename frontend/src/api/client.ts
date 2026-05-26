@@ -62,7 +62,7 @@ export async function askQuestion(params: {
       question: params.question,
       session_id: params.sessionId,
       top_k: params.topK ?? 5,
-      retrieval_strategy: params.retrievalStrategy ?? "hybrid"
+      retrieval_strategy: params.retrievalStrategy ?? "hybrid_rerank"
     })
   });
 }

@@ -10,7 +10,7 @@ from app.core.exceptions import AppError
 async def answer_question(
     question:str,
     top_k:int=6,
-    retrieval_strategy: str = "hybrid",
+    retrieval_strategy: str = "hybrid_rerank",
     )->dict:
     start_time=time.perf_counter()
     
@@ -64,7 +64,7 @@ async def answer_question(
     }
     #拓展chunk
     docs = expand_with_neighbors(
-        docs,
+        docs[:2],
         window=1,
         max_documents=8,
     )
