@@ -1,6 +1,7 @@
 """Write chat service here."""
 import time
 
+from app.rag.context_expander import expand_with_neighbors
 from app.rag.chains import build_answer_chain,build_rewrite_chain
 from app.rag.retrievers import build_retriever
 from app.rag.citations import format_context, build_sources
@@ -61,6 +62,12 @@ async def answer_question(
             "retrieval_strategy": retrieval_strategy,
         },
     }
+    #拓展chunk
+    docs = expand_with_neighbors(
+        docs,
+        window=1,
+        max_documents=8,
+    )
     #把检索到的文档列表进行格式化，得到一个字符串形式的上下文
     context=format_context(docs)
     sources=build_sources(docs)

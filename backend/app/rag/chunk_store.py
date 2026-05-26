@@ -115,3 +115,29 @@ def delete_chunks_by_document_id(document_id: str) -> int:
 def clear_chunks()->None:
     CHUNK_STORE_PATH.parent.mkdir(parents=True,exist_ok=True)
     CHUNK_STORE_PATH.write_text("",encoding="utf-8")
+    
+#根据 document_id 和 chunk_index 查找相邻的 chunk，window 参数控制查找范围，比如 window=1 就是前后各一个 chunk，window=2 就是前后各两个 chunk，以此类推。
+def find_neighbor_chunks(
+    document_id: str,
+    chunk_index: int,
+    window: int = 1,
+) -> list[Document]:
+    chunks = load_chunks()
+
+    results = []
+
+    for chunk in chunks:
+        if chunk.metadata.get("document_id") != document_id:
+            continue
+
+        current_index = chunk.metadata.get("chunk_index")
+        if current_index is None:
+            continue
+
+        if abs(int(current_index) - chunk_index) <= window:
+            results.append(chunk)
+
+    return sorted(
+        results,
+        key=lambda doc: int(doc.metadata.get("chunk_index", 0)),
+    )
