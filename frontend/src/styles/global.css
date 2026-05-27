@@ -640,6 +640,18 @@ button {
   white-space: nowrap;
 }
 
+.retrieval-box .confidence-value.high {
+  color: #16833a;
+}
+
+.retrieval-box .confidence-value.medium {
+  color: #9a6a00;
+}
+
+.retrieval-box .confidence-value.low {
+  color: #c1342d;
+}
+
 .source-list {
   display: flex;
   flex-direction: column;

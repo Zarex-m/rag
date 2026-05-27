@@ -6,11 +6,16 @@ from app.rag.chains import build_answer_chain,build_rewrite_chain
 from app.rag.retrievers import build_retriever
 from app.rag.citations import format_context, build_sources
 from app.rag.hybrid_retriever import hybrid_retrieve
+from app.rag.confidence import build_confidence
 from app.core.exceptions import AppError
+from app.rag.chains import build_multi_query_chain
+from app.rag.hybrid_retriever import hybrid_retrieve_multi_query
+
 async def answer_question(
     question:str,
     top_k:int=6,
     retrieval_strategy: str = "hybrid_rerank",
+    metadata_filter: dict | None = None,
     )->dict:
     start_time=time.perf_counter()
     neighbor_window = 1
@@ -28,6 +33,24 @@ async def answer_question(
         message="问题改写失败，请检查大模型服务。",
         status_code=502,
     ) from e
+        
+    multi_queries=[rewrite_question]
+    try:
+        multi_query_chain=build_multi_query_chain()
+        multi_query_response=await multi_query_chain.ainvoke({"question":question})
+       
+        generated_queries = [
+            line.strip(" -0123456789.、")
+            for line in multi_query_response.content.splitlines()
+            if line.strip()
+        ]
+        
+        for query in generated_queries:
+            if query and query not in multi_queries:
+                multi_queries.append(query)
+        multi_queries=multi_queries[:4]
+    except Exception:
+        multi_queries=multi_queries[:1]
 
     #创建检索器对象，然后调用invoke方法进行检索，得到相关文档列表
     try:
@@ -36,15 +59,27 @@ async def answer_question(
                 rewrite_question,
                 top_k=top_k,
                 use_reranker=False,
+                bm25_query=f"{question} {rewrite_question}",
+                filter=metadata_filter
             )
         elif retrieval_strategy == "hybrid_rerank":
             docs = await hybrid_retrieve(
                 rewrite_question,
                 top_k=top_k,
                 use_reranker=True,
+                bm25_query=f"{question} {rewrite_question}",
+                filter=metadata_filter
+            )
+        elif retrieval_strategy == "multi_hybrid_rerank":
+            docs = await hybrid_retrieve_multi_query(
+                queries=multi_queries,
+                top_k=top_k,
+                use_reranker=True,
+                rerank_query=question,
+                filter=metadata_filter
             )
         else:
-            retriever = build_retriever(top_k=top_k, search_type=retrieval_strategy)
+            retriever = build_retriever(top_k=top_k, search_type=retrieval_strategy, filter=metadata_filter)
             docs = await retriever.ainvoke(rewrite_question)
     except Exception as e:
         raise AppError(
@@ -55,6 +90,7 @@ async def answer_question(
 
     if not docs:
         latency_ms = int((time.perf_counter() - start_time) * 1000)
+        confidence = build_confidence(question=question, documents=[], top_k=top_k)
         return {
         "answer": "知识库中没有找到与该问题相关的内容。",
         "sources": [],
@@ -68,9 +104,12 @@ async def answer_question(
             "neighbor_window": neighbor_window,
             "max_context_documents": max_context_documents,
             "expansion_seed_count": expansion_seed_count,
+            "metadata_filter": metadata_filter,
+            "confidence": confidence,
         },
     }
     retrieved_count = len(docs)
+    confidence = build_confidence(question=question, documents=docs, top_k=top_k)
     #拓展chunk
     docs = expand_with_neighbors(
         docs[:expansion_seed_count],
@@ -113,5 +152,8 @@ async def answer_question(
             "neighbor_window": neighbor_window,
             "max_context_documents": max_context_documents,
             "expansion_seed_count": expansion_seed_count,
+            "multi_queries": multi_queries,
+            "metadata_filter": metadata_filter,
+            "confidence": confidence,
         }
     }

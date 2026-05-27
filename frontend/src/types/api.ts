@@ -1,5 +1,17 @@
 export type DocumentStatus = "uploaded" | "processing" | "indexed" | "failed";
-export type RetrievalStrategy = "similarity" | "mmr" | "hybrid" | "hybrid_rerank";
+export type RetrievalStrategy =
+  | "similarity"
+  | "mmr"
+  | "hybrid"
+  | "hybrid_rerank"
+  | "multi_hybrid_rerank";
+
+export interface ConfidenceInfo {
+  score: number;
+  level: "high" | "medium" | "low";
+  reason: string;
+  signals?: Record<string, number | string | null>;
+}
 
 export interface DocumentItem {
   document_id: string;
@@ -31,6 +43,8 @@ export interface RetrievalInfo {
   neighbor_window?: number;
   max_context_documents?: number;
   expansion_seed_count?: number;
+  metadata_filter?: Record<string, unknown> | null;
+  confidence?: ConfidenceInfo | null;
 }
 
 export interface ChatResponse {

@@ -1,25 +1,45 @@
-{"question":"随机试验的三个特征是什么？","expected_keywords":["重复性","多样性","随机性"],"expected_source":"第1章 随机事件及其概率.pdf"}
-{"question":"条件概率是如何定义的？","expected_keywords":["条件概率","P(AB)","P(B)"],"expected_source":"第1章 随机事件及其概率.pdf"}
-{"question":"全概率公式的核心思想是什么？","expected_keywords":["全概率公式","划分","原因"],"expected_source":"第1章 随机事件及其概率.pdf"}
-{"question":"贝叶斯公式主要解决什么类型的问题？","expected_keywords":["贝叶斯公式","条件概率","全概率公式"],"expected_source":"第1章 随机事件及其概率.pdf"}
-{"question":"事件相互独立的定义是什么？","expected_keywords":["独立","P(AB)","P(A)"],"expected_source":"第1章 随机事件及其概率.pdf"}
-{"question":"贝努利试验和n重贝努利试验分别是什么意思？","expected_keywords":["贝努力试验","贝努利","独立"],"expected_source":"第1章 随机事件及其概率.pdf"}
-{"question":"随机变量是什么？","expected_keywords":["随机变量","函数","样本空间"],"expected_source":"第2章 随机变量及其分布函数.pdf"}
-{"question":"随机变量可以分为哪些类型？","expected_keywords":["离散型随机变量","连续型随机变量","非离散型"],"expected_source":"第2章 随机变量及其分布函数.pdf"}
-{"question":"离散型随机变量的分布律需要满足哪些基本性质？","expected_keywords":["分布律","非负","求和"],"expected_source":"第2章 随机变量及其分布函数.pdf"}
-{"question":"0-1分布又叫什么，它的分布律如何表示？","expected_keywords":["0-1","伯努利分布","两点分布"],"expected_source":"第2章 随机变量及其分布函数.pdf"}
-{"question":"二项分布的定义和概率公式是什么？","expected_keywords":["二项分布","n重伯努利","C"],"expected_source":"第2章 随机变量及其分布函数.pdf"}
-{"question":"泊松分布的分布律是什么？","expected_keywords":["泊松分布","λ","e"],"expected_source":"第2章 随机变量及其分布函数.pdf"}
-{"question":"泊松分布在什么情况下可以近似二项分布？","expected_keywords":["泊松定理","逼近","二项分布"],"expected_source":"第2章 随机变量及其分布函数.pdf"}
-{"question":"分布函数有哪些基本性质？","expected_keywords":["分布函数","单调","右连续"],"expected_source":"第2章 随机变量及其分布函数.pdf"}
-{"question":"正态分布中的3西格玛准则说明什么？","expected_keywords":["3","西格玛","0.003"],"expected_source":"第2章 随机变量及其分布函数.pdf"}
-{"question":"离散型随机变量函数的分布应该怎么求？","expected_keywords":["g(x)","概率相加","分布律"],"expected_source":"第2章 随机变量及其分布函数.pdf"}
-{"question":"连续型随机变量函数的分布函数法步骤是什么？","expected_keywords":["分布函数法","先求","求导"],"expected_source":"第2章 随机变量及其分布函数.pdf"}
-{"question":"二维随机变量的联合分布函数如何定义？","expected_keywords":["联合分布函数","P","X"],"expected_source":"第3章 多维随机变量及其分布.pdf"}
-{"question":"二维联合分布函数有哪些性质？","expected_keywords":["单调","右连续","0"],"expected_source":"第3章 多维随机变量及其分布.pdf"}
-{"question":"二维离散型随机变量的联合分布律有哪些基本性质？","expected_keywords":["联合分布律","非负","概率"],"expected_source":"第3章 多维随机变量及其分布.pdf"}
-{"question":"二维连续型随机变量的联合概率密度有哪些性质？","expected_keywords":["概率密度","非负","积分"],"expected_source":"第3章 多维随机变量及其分布.pdf"}
-{"question":"边缘分布和联合分布之间有什么关系？","expected_keywords":["边缘分布","联合分布","不能确定"],"expected_source":"第3章 多维随机变量及其分布.pdf"}
-{"question":"相互独立随机变量的最大值和最小值的分布函数如何表示？","expected_keywords":["max","min","F"],"expected_source":"第3章 多维随机变量及其分布.pdf"}
-{"question":"两个独立连续型随机变量和的分布可以用什么公式求？","expected_keywords":["卷积公式","Z","X+Y"],"expected_source":"第3章 多维随机变量及其分布.pdf"}
-{"question":"有限个相互独立的正态随机变量的线性组合服从什么分布？","expected_keywords":["正态随机变量","线性组合","正态分布"],"expected_source":"第3章 多维随机变量及其分布.pdf"}
+{"question":"如果一个试验可以反复做，但每次结果事先不能确定，这类试验在概率论里叫什么？它通常有哪些特征？","expected_keywords":["随机试验","重复性","随机性"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"paraphrase"}
+{"question":"样本空间、样本点和随机事件之间是什么关系？","expected_keywords":["样本空间","样本点","随机事件"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"definition"}
+{"question":"必然事件和不可能事件分别表示什么？","expected_keywords":["必然事件","不可能事件","样本空间"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"precise"}
+{"question":"两个事件不能同时发生时，在概率论中应该称为什么关系？","expected_keywords":["互不相容","互斥","不可能事件"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"paraphrase"}
+{"question":"事件 A 的对立事件和 A 本身有什么关系？","expected_keywords":["对立事件","互不相容","必然事件"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"precise"}
+{"question":"频率和概率之间有什么联系？为什么频率可以用来估计概率？","expected_keywords":["频率","概率","稳定"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"reasoning"}
+{"question":"概率的加法公式解决什么问题？什么时候可以直接相加？","expected_keywords":["加法公式","互不相容","概率"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"formula"}
+{"question":"在已知 B 发生的前提下，A 发生的概率应该如何定义？","expected_keywords":["条件概率","P(AB)","P(B)"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"formula"}
+{"question":"乘法公式和条件概率有什么关系？","expected_keywords":["乘法公式","条件概率","P(AB)"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"relation"}
+{"question":"当一个事件可能由多个互斥原因导致时，应该用哪个公式计算它的概率？","expected_keywords":["全概率公式","划分","互不相容"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"paraphrase"}
+{"question":"贝叶斯公式适合解决什么方向的问题？它和全概率公式有什么关系？","expected_keywords":["贝叶斯公式","全概率公式","条件概率"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"relation"}
+{"question":"如何判断两个事件相互独立？独立和互不相容是不是一回事？","expected_keywords":["相互独立","P(AB)","互不相容"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"distractor"}
+{"question":"n 重伯努利试验要求每次试验满足哪些条件？","expected_keywords":["伯努利试验","独立","重复"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"precise"}
+{"question":"随机变量为什么可以理解成试验结果到实数的映射？","expected_keywords":["随机变量","样本空间","函数"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"paraphrase"}
+{"question":"离散型随机变量和连续型随机变量的核心区别是什么？","expected_keywords":["离散型随机变量","连续型随机变量","概率密度"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"comparison"}
+{"question":"分布律要成为合法的概率分布，需要满足哪两个基本条件？","expected_keywords":["分布律","非负","求和"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"precise"}
+{"question":"只有成功和失败两种结果的随机变量通常对应什么分布？","expected_keywords":["0-1分布","伯努利分布","两点分布"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"paraphrase"}
+{"question":"二项分布为什么和 n 重伯努利试验有关？","expected_keywords":["二项分布","n重伯努利","独立"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"relation"}
+{"question":"泊松分布的参数通常表示什么？它的分布律形式包含哪些关键符号？","expected_keywords":["泊松分布","λ","e"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"formula"}
+{"question":"什么条件下可以用泊松分布近似二项分布？","expected_keywords":["泊松定理","二项分布","近似"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"precise"}
+{"question":"分布函数 F(x) 的单调性、右连续性和极限性质分别是什么？","expected_keywords":["分布函数","单调","右连续"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"precise"}
+{"question":"连续型随机变量的概率密度函数本身是不是概率？应该怎样通过它求区间概率？","expected_keywords":["概率密度","积分","连续型随机变量"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"distractor"}
+{"question":"均匀分布的密度函数有什么特点？","expected_keywords":["均匀分布","概率密度","区间"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"precise"}
+{"question":"指数分布通常用哪个参数表示？它的密度函数有什么形式特征？","expected_keywords":["指数分布","λ","概率密度"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"formula"}
+{"question":"正态分布的 3σ 准则说明了什么概率现象？","expected_keywords":["正态分布","3","西格玛"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"paraphrase"}
+{"question":"求离散型随机变量函数的分布时，为什么有时要把多个概率相加？","expected_keywords":["随机变量函数","分布律","概率相加"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"reasoning"}
+{"question":"连续型随机变量函数的分布函数法通常先求什么、再做什么？","expected_keywords":["分布函数法","先求","求导"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"procedure"}
+{"question":"二维随机变量和一维随机变量相比，研究重点多了哪些内容？","expected_keywords":["二维随机变量","分量","关联"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"comparison"}
+{"question":"二维随机变量的联合分布函数 F(x,y) 表示哪个区域内的概率？","expected_keywords":["联合分布函数","X","Y"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"paraphrase"}
+{"question":"二维联合分布函数有哪些性质？和一维分布函数的性质有什么相似之处？","expected_keywords":["单调","右连续","联合分布函数"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"comparison"}
+{"question":"已知二维离散型随机变量的联合分布律，如何得到某个分量的边缘分布律？","expected_keywords":["边缘分布律","联合分布律","求和"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"procedure"}
+{"question":"边缘分布能不能唯一确定联合分布？为什么这个问题容易出错？","expected_keywords":["边缘分布","联合分布","不能确定"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"distractor"}
+{"question":"二维连续型随机变量的联合概率密度需要满足哪些基本性质？","expected_keywords":["联合概率密度","非负","积分"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"precise"}
+{"question":"从联合密度求边缘密度时，对哪个变量积分？","expected_keywords":["边缘密度","联合密度","积分"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"procedure"}
+{"question":"二维随机变量的条件分布和边缘分布有什么区别？","expected_keywords":["条件分布","边缘分布","条件"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"comparison"}
+{"question":"如何判断两个随机变量相互独立？离散型和连续型情况下分别看什么？","expected_keywords":["相互独立","联合分布","边缘分布"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"comparison"}
+{"question":"独立随机变量的最大值和最小值的分布函数分别应该怎样处理？","expected_keywords":["最大值","最小值","分布函数"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"procedure"}
+{"question":"两个独立连续型随机变量之和的密度为什么会用到卷积公式？","expected_keywords":["卷积公式","X+Y","概率密度"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"reasoning"}
+{"question":"二维随机变量函数的分布和一维随机变量函数的分布有什么联系？","expected_keywords":["随机变量函数","二维随机变量","分布"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"comparison"}
+{"question":"多个相互独立的正态随机变量做线性组合后，结果仍然服从什么分布？","expected_keywords":["正态随机变量","线性组合","正态分布"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"precise"}
+{"question":"随机变量的分布函数和二维随机变量的联合分布函数有什么区别？","expected_keywords":["分布函数","联合分布函数","二维随机变量"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"cross_chapter"}
+{"question":"事件独立性和随机变量独立性在判断形式上有什么相似点？","expected_keywords":["独立","联合分布","乘积"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"cross_chapter"}
+{"question":"如果题目只给出边缘分布，为什么还不能直接判断两个随机变量的联合行为？","expected_keywords":["边缘分布","联合分布","不能确定"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"reasoning"}
+{"question":"概率论里“由整体分布推出各个分量分布”和“由各个分量推出整体分布”哪一个总是成立？","expected_keywords":["联合分布","边缘分布","不能确定"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"paraphrase"}
+{"question":"为什么问“连续型随机变量取某一个点的概率”时不能直接看密度函数值？","expected_keywords":["连续型随机变量","概率密度","积分"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"distractor"}

@@ -15,7 +15,9 @@ class ChatRequest(BaseModel):
     "mmr",
     "hybrid",
     "hybrid_rerank",
+    "multi_hybrid_rerank",
 ] = "hybrid_rerank"
+    metadata_filter: dict | None = None
     
 @router.post("")
 async def chat(request:ChatRequest)->dict:
@@ -23,5 +25,6 @@ async def chat(request:ChatRequest)->dict:
         question=request.question,
         top_k=request.top_k,
         retrieval_strategy=request.retrieval_strategy,
+        metadata_filter=request.metadata_filter,
     )
     return ok(data=result)

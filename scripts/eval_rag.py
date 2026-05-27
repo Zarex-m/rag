@@ -26,6 +26,14 @@ def keyword_hit(text: str, keywords: list[str]) -> bool:
 
     return any(keyword in text for keyword in keywords)
 
+def keyword_hit_count(text: str, keywords: list[str]) -> int:
+    return sum(1 for keyword in keywords if keyword in text)
+
+def keyword_hit_rate(text: str, keywords: list[str]) -> float:
+    if not keywords:
+        return 0.0
+    return keyword_hit_count(text, keywords) / len(keywords)
+
 def source_file_hit(soources:list[dict],expected_source:str)->bool:
     if not expected_source:
         return False
@@ -33,7 +41,8 @@ def source_file_hit(soources:list[dict],expected_source:str)->bool:
     for source in soources:
         title=source.get("title","")
         file_path=source.get("file_path","")
-        if expected_source in title or expected_source in file_path:
+        source_path=source.get("source","")
+        if expected_source in title or expected_source in file_path or expected_source in source_path:
             return True
     return False
 
@@ -64,6 +73,10 @@ async def run_eval(case: dict, top_k: int, retrieval_strategy: str) -> dict:
         "latency_ms": latency_ms,
         "answer_keyword_hit": keyword_hit(answer, expected_keywords),
         "source_keyword_hit": keyword_hit(source_text, expected_keywords),
+        "answer_keyword_hit_count": keyword_hit_count(answer, expected_keywords),
+        "source_keyword_hit_count": keyword_hit_count(source_text, expected_keywords),
+        "answer_keyword_hit_rate": keyword_hit_rate(answer, expected_keywords),
+        "source_keyword_hit_rate": keyword_hit_rate(source_text, expected_keywords),
         "source_file_hit": source_file_hit(sources, expected_source),
         "expected_keywords": expected_keywords,
         "expected_source": expected_source,
@@ -96,7 +109,7 @@ async def main() -> None:
     parser.add_argument(
     "--retrieval",
     default="hybrid",
-    choices=["similarity", "mmr", "hybrid", "hybrid_rerank"]
+    choices=["similarity", "mmr", "hybrid", "hybrid_rerank", "multi_hybrid_rerank"]
 )
     #解析命令行参数，得到一个args对象，里面就有了input、output和top_k的属性，可以在代码里使用它们。
     args = parser.parse_args()
@@ -122,6 +135,8 @@ async def main() -> None:
     answer_hits = sum(1 for item in results if item["answer_keyword_hit"])
     source_hits = sum(1 for item in results if item["source_keyword_hit"])
     source_file_hits=sum(1 for item in results if item["source_file_hit"])
+    avg_answer_keyword_hit_rate = sum(item["answer_keyword_hit_rate"] for item in results) / total if total else 0
+    avg_source_keyword_hit_rate = sum(item["source_keyword_hit_rate"] for item in results) / total if total else 0
     avg_latency = sum(item["latency_ms"] for item in results) / total if total else 0
 
     print("\nEval Summary")
@@ -129,6 +144,8 @@ async def main() -> None:
     print(f"total: {total}")
     print(f"answer_keyword_hit_rate: {answer_hits / total:.2%}")
     print(f"source_keyword_hit_rate: {source_hits / total:.2%}")
+    print(f"avg_answer_keyword_coverage: {avg_answer_keyword_hit_rate:.2%}")
+    print(f"avg_source_keyword_coverage: {avg_source_keyword_hit_rate:.2%}")
     print(f"source_file_hit_rate: {source_file_hits / total:.2%}")
     print(f"avg_latency_ms: {avg_latency:.0f}")
     print(f"output: {output_path}")

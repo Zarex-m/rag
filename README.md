@@ -227,21 +227,49 @@ http://localhost:8000/docs
 
 ## 轻量评估
 
-项目提供 `scripts/eval_rag.py` 用于对不同检索策略进行轻量评估，当前支持：
+项目提供两类轻量评估脚本：
+
+- `scripts/eval_rag.py`：完整 RAG 链路评估，包含检索、生成、答案关键词命中、来源关键词命中和平均延迟
+- `scripts/eval_retrieval.py`：只评估检索阶段，不调用大模型生成答案，重点观察 top1/top3 来源命中率和关键词覆盖率
+
+当前支持的检索策略：
 
 - `similarity`
 - `mmr`
 - `hybrid`
 - `hybrid_rerank`
 
-在 25 条自建评估集上，Hybrid Retrieval 与 Hybrid + Reranker 的结果如下：
+完整 RAG 链路在 25 条基础评估集上的结果如下：
 
 | Strategy | Answer Hit Rate | Source Hit Rate | Avg Latency |
 | --- | --- | --- | --- |
 | hybrid | 100.00% | 96.00% | 2874 ms |
 | hybrid_rerank | 100.00% | 96.00% | 4028 ms |
 
-当前评估集下，两种策略的命中率接近，Reranker 主要体现为完整链路验证和更高延迟。后续可以通过增加复杂问题、跨章节问题和干扰问题，更充分地评估 Reranker 对检索质量的提升。
+基础评估集问题较简单，不同检索策略的结果差异不明显。为了更好地区分检索效果，项目进一步构建了 45 条困难评估问题，覆盖同义改写、跨章节问题、干扰问题、精确定位问题、对比型问题和推理型问题。
+
+在困难评估集上，只评估检索阶段的结果如下：
+
+| Strategy | Top1 Source Hit | Top3 Source Hit | Source Keyword Coverage |
+| --- | --- | --- | --- |
+| similarity | 86.67% | 97.78% | 72.59% |
+| mmr | 86.67% | 100.00% | 71.85% |
+| hybrid | 86.67% | 100.00% | 74.81% |
+| hybrid_rerank | 91.11% | 100.00% | 76.30% |
+
+从结果可以看到，`hybrid_rerank` 在 Top1 来源命中率和关键词覆盖率上表现最好，说明 Hybrid Retrieval 负责扩大候选召回，CrossEncoder Reranker 可以进一步提升候选 chunks 的排序质量。
+
+运行检索评估：
+
+```bash
+PYTHONPATH=backend .venv/bin/python scripts/eval_retrieval.py --retrieval hybrid_rerank
+```
+
+运行完整 RAG 评估：
+
+```bash
+PYTHONPATH=backend .venv/bin/python scripts/eval_rag.py --retrieval hybrid_rerank
+```
 
 ## 快速启动
 
@@ -307,12 +335,21 @@ docs/      项目设计和接口说明文档
 
 当前项目已经完成端到端 RAG 流程，支持文档上传、知识库问答、引用来源展示和检索策略切换。
 
-轻量评估结果：
+基础 RAG 评估结果：
 
 | Strategy | Answer Hit Rate | Source Hit Rate | Avg Latency |
 | --- | --- | --- | --- |
 | hybrid | 100.00% | 96.00% | 2874 ms |
 | hybrid_rerank | 100.00% | 96.00% | 4028 ms |
+
+困难检索评估结果：
+
+| Strategy | Top1 Source Hit | Top3 Source Hit | Source Keyword Coverage |
+| --- | --- | --- | --- |
+| similarity | 86.67% | 97.78% | 72.59% |
+| mmr | 86.67% | 100.00% | 71.85% |
+| hybrid | 86.67% | 100.00% | 74.81% |
+| hybrid_rerank | 91.11% | 100.00% | 76.30% |
 
 ## 项目亮点
 
@@ -321,12 +358,12 @@ docs/      项目设计和接口说明文档
 - 实现 Hybrid Retrieval，将向量检索、BM25 关键词检索和 RRF 融合结合起来
 - 引入 CrossEncoder Reranker，对候选 chunks 进行二次精排
 - 针对 PDF 解析噪声进行 Loader 对比、文本清洗、目录过滤和 metadata 增强
-- 提供轻量 Eval 脚本，对不同检索策略的命中率和延迟进行对比
+- 提供轻量 Eval 脚本，对不同检索策略的来源命中率、关键词覆盖率和延迟进行对比
 - 前后端分离实现，支持文档管理、知识库问答和来源展示
 
 ## 后续优化
 
-- 扩充评估集，增加跨章节问题、干扰问题和复杂推理问题
+- 继续扩充评估集，增加更多跨文档、多跳推理和真实业务问题
 - 优化 PDF 清洗和 chunk metadata，加入章节标题等结构信息
 - 支持更多文档类型，例如 Word、Excel、网页等
 - 引入 Multi Query Retrieval，提高复杂问题召回能力

@@ -28,6 +28,8 @@ class RetrievalInfo(BaseModel):
     neighbor_window: int | None = None
     max_context_documents: int | None = None
     expansion_seed_count: int | None = None
+    metadata_filter: dict | None = None
+    confidence: dict | None = None
 
 
 class ChatResponse(BaseModel):

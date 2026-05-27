@@ -10,7 +10,7 @@ from app.rag.vectorstore import clear_vectorstore
 from app.services.document_service import list_raw_document_files
 from app.rag.text_cleaner import clean_text,is_valid_chunk
 
-async def ingest_document(file_path:str,document_id:str)->dict:
+async def ingest_document(file_path:str,document_id:str,extra_metadata: dict | None = None,)->dict:
     path=Path(file_path)
     
     docs=load_document(str(path))
@@ -31,6 +31,8 @@ async def ingest_document(file_path:str,document_id:str)->dict:
         chunk.metadata["filename"] = path.name
         chunk.metadata["chapter"] = extract_chapter(path.name)
         chunk.metadata["content_length"] = len(chunk.page_content)
+        if extra_metadata:
+            chunk.metadata.update(extra_metadata)
         cleaned_chunks.append(chunk)
     
     vectorstore=build_vectorstore()

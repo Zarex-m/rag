@@ -81,13 +81,17 @@ async def hybrid_retrieve(
     query: str,
     top_k: int = 5,
     use_reranker: bool = False,
+    bm25_query:str|None=None,
+    filter: dict | None = None,
 ) -> list[Document]:
+    candidate_k = max(top_k * 4, 24)
     # 构建向量检索器
     # 这里用 MMR，让语义检索结果尽量兼顾相关性和多样性
     # 先多取一些候选，后面再融合筛选
     vector_retriever = build_retriever(
-        top_k=max(top_k * 2, 10),
+        top_k=candidate_k,
         search_type="mmr",
+        filter=filter,
     )
 
     # 异步执行向量检索
@@ -100,10 +104,10 @@ async def hybrid_retrieve(
     # 执行 BM25 检索
     # 同样先多取一些候选
     bm25_docs = bm25_retriever.retrieve(
-        query,
-        top_k=max(top_k * 2, 10),
+        bm25_query or query,
+        top_k=candidate_k,
     )
-    fused_top_k = max(top_k * 2, 10) if use_reranker else top_k
+    fused_top_k = candidate_k if use_reranker else top_k
     # 把向量检索结果和 BM25 检索结果用 RRF 融合
     # 最终只返回 top_k 条
     fused_docs = rrf_fusion(
@@ -115,3 +119,54 @@ async def hybrid_retrieve(
         return fused_docs
 
     return rerank_documents(query, fused_docs, top_k=top_k)
+
+def deduplicate_documents(documents: list[Document]) -> list[Document]:
+    seen = set()
+    results = []
+
+    for document in documents:
+        key = get_document_key(document)
+        if key in seen:
+            continue
+
+        seen.add(key)
+        results.append(document)
+
+    return results
+
+
+async def hybrid_retrieve_multi_query(
+    queries: list[str],
+    top_k: int = 5,
+    use_reranker: bool = False,
+    rerank_query: str | None = None,
+    filter: dict | None = None,
+) -> list[Document]:
+    ranked_lists = []
+
+    for query in queries:
+        docs = await hybrid_retrieve(
+            query=query,
+            top_k=max(top_k * 2, 10),
+            use_reranker=False,
+            filter=filter,
+        )
+        ranked_lists.append(docs)
+
+    fused_top_k = max(top_k * 4, 24) if use_reranker else top_k
+
+    fused_docs = rrf_fusion(
+        ranked_lists=ranked_lists,
+        top_k=fused_top_k,
+    )
+
+    fused_docs = deduplicate_documents(fused_docs)
+
+    if not use_reranker:
+        return fused_docs[:top_k]
+
+    return rerank_documents(
+        rerank_query or queries[0],
+        fused_docs,
+        top_k=top_k,
+    )

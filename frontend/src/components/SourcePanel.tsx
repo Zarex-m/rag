@@ -11,7 +11,10 @@ export function SourcePanel({ result }: SourcePanelProps) {
   const strategyLabel =
     result?.retrieval.retrieval_strategy === "hybrid_rerank"
       ? "hybrid+rerank"
+      : result?.retrieval.retrieval_strategy === "multi_hybrid_rerank"
+      ? "multi+hybrid+rerank"
       : result?.retrieval.retrieval_strategy;
+  const confidence = result?.retrieval.confidence;
 
   return (
     <aside className="source-panel">
@@ -49,6 +52,17 @@ export function SourcePanel({ result }: SourcePanelProps) {
             <div>
               <span>扩展窗口</span>
               <strong>{result.retrieval.neighbor_window ?? "-"}</strong>
+            </div>
+            <div>
+              <span>置信度</span>
+              <strong
+                className={
+                  confidence ? `confidence-value ${confidence.level}` : "confidence-value"
+                }
+                title={confidence?.reason ?? ""}
+              >
+                {confidence ? `${confidence.level} · ${(confidence.score * 100).toFixed(0)}%` : "-"}
+              </strong>
             </div>
             <div className="retrieval-query">
               <span>改写 Query</span>
