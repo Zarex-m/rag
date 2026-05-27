@@ -1,34 +1,36 @@
 # RAG Knowledge Base Assistant
 
-这是一个基于 FastAPI、LangChain、Chroma、智谱 Embedding 和 DeepSeek 的知识库问答系统。项目支持文档入库、自动切分、向量检索、RAG 问答、引用溯源和轻量评估。
+这是一个基于 FastAPI、LangChain、Chroma、智谱 Embedding 和 DeepSeek 的知识库问答系统。项目支持 PDF / TXT / Markdown / Obsidian 笔记入库，覆盖文档清洗、文本切分、向量化、检索增强、RAG 问答、引用溯源和轻量评估。
 
 ## 项目背景
 
-本项目用于模拟企业知识库问答场景。用户可以上传 PDF / TXT / Markdown 文件，系统会自动完成文本解析、文本切分和向量化入库。用户提问时，系统会通过 Query Rewrite 和 Hybrid Retrieval 召回相关片段，再调用大模型生成基于上下文的回答，并返回引用来源。
+本项目用于模拟个人知识库和企业知识库问答场景。用户可以上传文档，也可以批量导入本地 Obsidian Markdown 笔记。系统会自动完成文本解析、Markdown 清洗、chunk 切分、向量化入库和检索问答。
+
+用户提问时，后端会基于不同检索策略召回相关 chunks，并调用大模型生成严格基于上下文的回答，同时返回引用来源和检索可信度，方便验证答案依据。
 
 ## 技术栈
 
 - Backend: FastAPI
 - RAG Framework: LangChain
-- Embedding: 智谱 embedding-3
+- Embedding: 智谱 `embedding-3`
 - LLM: DeepSeek Chat
 - Vector Store: Chroma
-- Retrieval: Query Rewrite, MMR, BM25, RRF, CrossEncoder Reranker
+- Retrieval: Similarity, MMR, BM25, RRF, Multi Query, CrossEncoder Reranker
 - Frontend: React + Vite + TypeScript
 - Evaluation: 自定义轻量 RAG Eval
 
 ## 核心功能
 
-- 文档上传和管理：支持上传 PDF、TXT 和 Markdown 格式文件，提供文档列表、删除文档和重建索引能力
-- 文档解析和切分：基于 LangChain Loader 解析文档，并使用递归文本切分策略（RecursiveCharacterTextSplitter）生成 chunks
-- 向量化和入库：使用智谱 embedding-3 模型生成文本向量，并持久化存储到 Chroma 向量库中
-- 混合检索：支持向量检索、MMR检索和BM25关键词检索，并通过RRF融合多路检索结果
-- Reranker 重排：在 Hybrid Retrieval 召回候选 chunks 后，使用 CrossEncoder Reranker 对候选结果进行二次排序，提高最终进入上下文的证据质量
-- RAG问答：对用户问题进行query rewrite，检索相关上下文，基于检索结果，deepseek大模型给出最终回答
-- 引用溯源：最终结果会返回检索命中片段的所有信息，包括页码，来源文件，文档片段之类的信息，方便验证答案依据
-- 评估脚本：提供批量评估脚本，支持统计关键词命中率、来源命中率和平均延迟。
-- 前端交互：React + Vite 实现文档上传、知识库问答、引用来源展示等完整交互。
-- 统一 API 响应：后端接口使用统一成功/失败响应格式，并提供全局异常处理。
+- 文档入库：支持 PDF、TXT、Markdown 文档上传和 Obsidian 笔记批量导入
+- Markdown 清洗：处理 frontmatter、Obsidian 双链、图片引用、callout、Markdown 链接等语法噪声
+- Chunk 切分：使用 LangChain Splitter 生成 chunks，并保留 `source`、`filename`、`folder`、`tags`、`chunk_id` 等 metadata
+- 向量化入库：使用智谱 Embedding 生成向量，并持久化到 Chroma
+- 多策略检索：支持 `similarity`、`mmr`、`hybrid`、`hybrid_rerank`、`multi_hybrid_rerank`
+- RAG 问答：基于检索上下文调用 DeepSeek 生成答案
+- 引用溯源：返回命中文档、chunk_id、页码或笔记路径，方便验证来源
+- 可信度评分：基于召回数量、来源覆盖、关键词覆盖和重排分数生成 confidence
+- 轻量评估：对不同检索策略进行来源命中率和关键词覆盖率评估
+- 前端页面：支持文档管理、知识库问答、来源展示和检索策略切换
 
 ## 系统架构
 
@@ -36,145 +38,165 @@
 React 前端
   ├─ 文档上传
   ├─ 知识库问答
-  └─ 引用来源展示
+  └─ 来源展示
         │
         ▼
 FastAPI 后端
-  ├─ 文档管理接口
-  │   ├─ 保存原始文件到 data/raw
-  │   ├─ Loader 解析 PDF/TXT/Markdown
+  ├─ 文档入库 Pipeline
+  │   ├─ Loader 解析 PDF / TXT / Markdown
+  │   ├─ Markdown Cleaner 清洗 Obsidian 笔记
   │   ├─ Splitter 切分 chunks
-  │   ├─ 保存 chunks 到 data/processed/chunks.jsonl
-  │   └─ 调用 ZhipuAI Embedding 写入 Chroma
+  │   ├─ chunks.jsonl 保存文本和 metadata
+  │   └─ ZhipuAI Embedding 写入 Chroma
   │
-  └─ RAG 问答接口
-      ├─ DeepSeek Query Rewrite
-      ├─ Chroma 向量检索
+  └─ RAG 问答 Pipeline
+      ├─ Query Rewrite
+      ├─ Similarity / MMR 向量检索
       ├─ BM25 关键词检索
       ├─ RRF 融合排序
       ├─ CrossEncoder Reranker 二次重排
-      ├─ 构建上下文和引用来源
+      ├─ Context + Sources + Confidence
       └─ DeepSeek 生成回答
 ```
-
-支持 Mermaid 的平台可以查看下面的架构图：
 
 ```mermaid
 flowchart TD
     A["React 前端"] -->|"REST API"| B["FastAPI 后端"]
 
-    B --> C["文档入库 Pipeline"]
-    C --> D["Loader: PDF / TXT / Markdown"]
+    B --> C["文档入库"]
+    C --> D["Loader / Markdown Cleaner"]
     D --> E["Text Splitter"]
-    E --> F["Chunks: data/processed/chunks.jsonl"]
+    E --> F["chunks.jsonl"]
     E --> G["ZhipuAI Embedding"]
-    G --> H["Chroma 向量库"]
+    G --> H["Chroma"]
 
-    B --> I["RAG 问答 Pipeline"]
-    I --> J["Query Rewrite: DeepSeek"]
+    B --> I["RAG 问答"]
+    I --> J["Query Rewrite"]
     J --> K["Hybrid Retrieval"]
     K --> H
-    K --> L["BM25: jieba + rank_bm25"]
+    K --> L["BM25"]
     L --> F
-    K --> M["RRF 融合排序"]
-    M --> R["CrossEncoder Reranker"]
-    R --> N["Context + Sources"]
-    N --> O["Answer Generation: DeepSeek"]
-
-    O --> B
-    B --> A
+    K --> M["RRF"]
+    M --> N["Reranker"]
+    N --> O["Context + Sources + Confidence"]
+    O --> P["DeepSeek"]
+    P --> B
 ```
 
 ## RAG 流程
 
-### 1. 文档入库流程
+### 1. 入库流程
 
-1. 上传文件后，第一步会给文件生成唯一的 `document_id`，然后将文件保存在 `data/raw/{document_id}/` 目录下
-2. 根据文件类型，选择对应的解析器
-3. 然后会通过切分器切分成多个 chunks。每个 chunk 不仅会携带原始内容，还会加上 `document_id`、`chunk_id`、`source`、`page`、`chunk_index` 等信息，方便后续溯源
-4. 切分后的chunk会被写入两类存储：
-    - `data/processed/chunks.jsonl`：保存 chunk 文本和 metadata，用于 BM25 检索、调试和重建索引
-    - Chroma：保存 chunk 文本、metadata 和 embedding 向量，用于语义检索
+1. 上传文档或批量导入 Obsidian 笔记。
+2. 根据文件类型选择对应 Loader。
+3. Markdown 笔记会经过专门的 cleaner，去掉语法噪声并保留代码块。
+4. 文档被切分为 chunks，每个 chunk 携带 `document_id`、`chunk_id`、`source`、`filename`、`folder`、`tags` 等 metadata。
+5. chunk 文本写入 `data/processed/chunks.jsonl`，同时写入 Chroma 向量库。
 
 ### 2. 检索流程
 
-1. 用户提问后，系统会先通过 DeepSeek 对问题进行 Query Rewrite，将原始问题改写成更适合知识库检索的查询。
-2. 系统会同时执行两路检索：
-   - MMR 向量检索：基于 Chroma 召回语义相关的 chunks，并通过 MMR 减少重复内容。
-   - BM25 关键词检索：基于 `jieba` 分词和关键词匹配，补充精确词命中的能力。
-3. 两路检索结果会通过 RRF 算法进行融合排序，并根据 `chunk_id` 去重。对于 `hybrid_rerank` 策略，系统会先保留更多候选 chunks，再使用 CrossEncoder Reranker 进行二次重排，最终选取 top-k 个 chunks 进入大模型上下文。
+系统支持多种检索策略：
 
+- `similarity`：基础向量相似度检索
+- `mmr`：在相关性和多样性之间做平衡，减少重复召回
+- `hybrid`：向量检索 + BM25 关键词检索 + RRF 融合
+- `hybrid_rerank`：Hybrid 召回后使用 CrossEncoder Reranker 二次重排
+- `multi_hybrid_rerank`：多查询召回 + Hybrid + Reranker，适合复杂问题
 
 ### 3. 生成流程
 
-1. 将检索得到的chunks按照固定格式拼接为上下文 context,每个片段都来源、页码和 `chunk_id`等信息
-2. 将用户原始问题和context一起传给llm，由模型基于检索到的上下文进行回答
-3. 如果检索结果为空，系统会返回默认提示，避免大模型编造答案的情况
-4. 最后接口会返回回答内容、引用来源 sources 和本次检索的相关信息，方便前端展示答案和溯源。
+1. 将检索得到的 chunks 拼接成上下文。
+2. 将用户问题和上下文传入 DeepSeek。
+3. 模型只基于上下文生成答案。
+4. 接口返回答案、引用来源、检索信息和 confidence。
 
-## PDF 解析噪声处理
+## 文档清洗
 
-当前知识库中包含课件类 PDF，文档中存在公式、数学符号和复杂排版。实际解析后会出现一定的文本噪声，例如数学符号乱码、文字顺序错乱或局部换行异常。
+项目针对不同文档类型采用不同清洗策略。
 
-项目没有简单假设某个 PDF 解析器一定最优，而是对不同 Loader 的解析效果进行了抽样对比。例如在当前课件 PDF 上，`PyMuPDFLoader` 会把公式、字母和部分文本拆成大量短行，导致文本碎片化更严重；而 `PyPDFLoader` 虽然也存在公式符号乱码问题，但中文段落连续性更好，更适合当前的 embedding、BM25 和后续检索流程。因此当前项目保留 `PyPDFLoader` 作为默认解析器。
+对于 Markdown / Obsidian 笔记：
 
-针对 PDF 解析噪声，项目主要通过以下方式降低影响：
+- 去除 frontmatter、HTML 注释、图片引用和无用 Markdown 语法
+- 清洗 Obsidian 双链和 callout
+- 保留 C++ / 算法笔记中的代码块
+- 提取标题、路径、文件夹、tags 等 metadata
+- 在 chunk 前注入 `标题路径`，增强检索时的主题感知能力
 
-- 在入库阶段进行保守文本清洗，去除异常空白、合并中文断行并过滤低质量 chunk
-- 过滤目录页等对问答帮助较小的片段，减少无效内容进入向量库
-- 为 chunk 增加 `filename`、`page`、`chunk_index`、`content_length` 等 metadata，方便溯源和调试
-- 通过 Hybrid Retrieval、Reranker 和相邻 chunk 扩展，提高噪声文本场景下的召回稳定性和上下文完整性
-- 在检索对比页中保留 chunk 原文展示，用于观察不同检索策略在真实 PDF 噪声下的表现
+对于 PDF 文档：
 
-这一设计体现了真实 RAG 项目中的一个重要取舍：PDF 解析器需要根据文档类型进行测试和选择，不同场景下可能需要切换到 OCR、Unstructured 或更强的版面解析方案。
+- 保留 Loader 对比能力，方便针对不同 PDF 类型选择解析器
+- 通过文本清洗和 metadata 增强降低解析噪声影响
+- 在来源展示中保留页码和 chunk_id，方便定位原文
+
+## Obsidian 笔记入库
+
+项目提供脚本导入本地 Obsidian 知识库：
+
+```bash
+PYTHONPATH=backend .venv/bin/python scripts/ingest_obsidian_notes.py
+```
+
+当前测试数据来自本地 C++ 和数据结构与算法笔记库：
+
+| Metric | Value |
+| --- | --- |
+| Markdown files | 98 |
+| Loaded documents | 93 |
+| Total chunks | 235 |
+| Indexed vectors | 235 |
 
 ## 检索策略演进
 
-1. 基础向量检索
-项目最初使用 Chroma 向量数据库作为知识库索引，将用户问题转换为 embedding 后，在向量库中进行相似度检索。
-该方案实现简单，能够快速完成 RAG 的最小闭环，但在实际测试中发现，普通相似度检索容易召回内容相近甚至重复的 chunk，导致上下文信息覆盖不够充分。
+项目的检索链路按以下路线逐步增强：
 
-2. MMR检索优化
-为了解决召回结果重复的问题，项目将普通相似度检索升级为 MMR 检索。
+1. 基础向量检索：快速完成 RAG 最小闭环。
+2. MMR 检索：减少重复 chunks，让上下文覆盖更多信息点。
+3. Query Rewrite：将口语化问题改写成更适合检索的查询。
+4. Hybrid Retrieval：结合向量语义检索和 BM25 关键词检索。
+5. RRF 融合：对多路召回结果进行去重和排序融合。
+6. CrossEncoder Reranker：对候选 chunks 做二次精排。
+7. Multi Query Retrieval：用多个查询扩展复杂问题的召回范围。
 
-MMR，Maximal Marginal Relevance，最大边际相关性，是一种在“相关性”和“多样性”之间做平衡的检索策略。它不仅关注 chunk 与用户问题的相似度，也会尽量避免召回结果之间过于重复。
+项目没有固定认为某一种策略永远最好，而是通过评估脚本在不同数据集上对比效果，再选择当前场景下最合适的检索策略。
 
-通过 MMR 检索，可以让最终进入大模型上下文的内容覆盖更多信息点，减少重复文本对上下文窗口的浪费。
+## 轻量评估
 
-3. Query Rewrite
-在实际问答场景中，用户问题可能比较口语化、简略，或者和原始文档中的表达方式不完全一致。
+项目提供两类评估脚本：
 
-因此项目加入了 Query Rewrite 查询改写流程：在正式检索前，先使用大模型将用户问题改写为更适合检索的查询语句，从而提升问题表达和文档内容之间的匹配度。
+- `scripts/eval_retrieval.py`：只评估检索阶段，重点观察来源命中率和关键词覆盖率
+- `scripts/eval_rag.py`：评估完整 RAG 链路，包含检索、生成、答案关键词命中和平均延迟
 
-该步骤可以增强系统对模糊问题、口语化问题的召回能力。
+当前主评估集基于 C++ 和数据结构与算法 Obsidian 笔记构建，共 35 条问题，覆盖智能指针、并发、网络编程、排序、树、图和动态规划等主题。
 
-4. Hybrid Retrieval 混合检索
-在后续优化中，项目进一步实现了 Hybrid Retrieval 混合检索，将向量检索和关键词检索结合起来。
+每条评估样本包含：
 
-其中：
+- `question`：用户问题
+- `expected_source`：期望命中的笔记路径
+- `expected_keywords`：期望召回上下文中出现的关键词
+- `case_type`：问题类型
 
-- 向量检索负责语义相似度匹配；
-- BM25 关键词检索负责精确关键词、专业术语和定义类内容匹配；
-- RRF 融合算法用于合并两路检索结果并重新排序。
+运行检索评估：
 
-相比单一向量检索，混合检索能够同时兼顾语义理解和关键词精确匹配，提高复杂问题下的召回稳定性。
-
-5. Reranker 二次重排
-在 Hybrid Retrieval 的基础上，项目进一步加入了 CrossEncoder Reranker。
-
-Hybrid Retrieval 更偏向“召回”，目标是从向量检索和关键词检索中尽可能找到相关候选内容；Reranker 更偏向“精排”，它会对用户问题和候选 chunk 进行成对打分，重新判断每个 chunk 与问题的相关性。
-
-因此最终检索链路变为：
-
-```text
-Query Rewrite
-    -> MMR 向量检索 + BM25 关键词检索
-    -> RRF 融合排序
-    -> CrossEncoder Reranker 二次重排
-    -> Top-K 上下文构建
+```bash
+PYTHONPATH=backend .venv/bin/python scripts/eval_retrieval.py --retrieval mmr
 ```
 
-该策略可以提升复杂问题下的上下文质量，但也会带来额外推理开销，因此项目保留了 `hybrid` 和 `hybrid_rerank` 两种策略，方便在效果和延迟之间进行权衡。
+当前 Obsidian 笔记评估结果：
+
+| Strategy | Top1 Source Hit | Top3 Source Hit | TopK Source Hit | Keyword Hit | Keyword Coverage |
+| --- | --- | --- | --- | --- | --- |
+| similarity | 97.14% | 97.14% | 97.14% | 100.00% | 93.33% |
+| mmr | 97.14% | 97.14% | 97.14% | 100.00% | 93.33% |
+| hybrid | 91.43% | 94.29% | 97.14% | 97.14% | 90.48% |
+| hybrid_rerank | 82.86% | 94.29% | 97.14% | 100.00% | 90.48% |
+| multi_hybrid_rerank | 82.86% | 94.29% | 97.14% | 97.14% | 89.52% |
+
+当前结论：
+
+- 在清洗后的 Obsidian Markdown 笔记中，`similarity` 和 `mmr` 表现最好。
+- 这说明当文档结构清晰、标题路径明确、问题与笔记表达接近时，简单向量检索已经可以取得较高命中率。
+- `hybrid_rerank` 更适合 PDF、网页、术语密集或噪声更大的知识库；在当前数据集上反而可能因为候选融合和重排模型领域适配问题降低 Top1 命中。
+- 项目的重点不是固定使用最复杂的检索链路，而是通过评估驱动选择最合适的检索策略。
 
 ## API 接口
 
@@ -184,7 +206,7 @@ Query Rewrite
 http://localhost:8000/docs
 ```
 
-核心接口如下：
+核心接口：
 
 | Method | Path | Description |
 | --- | --- | --- |
@@ -195,13 +217,11 @@ http://localhost:8000/docs
 | POST | `/api/documents/rebuild-index` | 基于已上传文档重建索引 |
 | POST | `/api/chat` | 基于知识库进行问答，支持多种检索策略 |
 
-其中 `/api/chat` 是核心问答接口，支持 `similarity`、`mmr`、`hybrid` 和 `hybrid_rerank` 检索策略。
-
 ## 统一响应与异常处理
 
-后端接口统一使用成功/失败响应结构，方便前端统一处理请求结果和错误提示。
+后端接口统一使用成功 / 失败响应结构，方便前端统一处理请求结果和错误提示。
 
-成功响应格式：
+成功响应：
 
 ```json
 {
@@ -212,7 +232,7 @@ http://localhost:8000/docs
 }
 ```
 
-失败响应格式：
+失败响应：
 
 ```json
 {
@@ -223,54 +243,6 @@ http://localhost:8000/docs
 }
 ```
 
-项目通过全局异常处理将业务异常、参数校验异常和未知异常转换为统一结构，避免接口返回格式不一致。
-
-## 轻量评估
-
-项目提供两类轻量评估脚本：
-
-- `scripts/eval_rag.py`：完整 RAG 链路评估，包含检索、生成、答案关键词命中、来源关键词命中和平均延迟
-- `scripts/eval_retrieval.py`：只评估检索阶段，不调用大模型生成答案，重点观察 top1/top3 来源命中率和关键词覆盖率
-
-当前支持的检索策略：
-
-- `similarity`
-- `mmr`
-- `hybrid`
-- `hybrid_rerank`
-
-完整 RAG 链路在 25 条基础评估集上的结果如下：
-
-| Strategy | Answer Hit Rate | Source Hit Rate | Avg Latency |
-| --- | --- | --- | --- |
-| hybrid | 100.00% | 96.00% | 2874 ms |
-| hybrid_rerank | 100.00% | 96.00% | 4028 ms |
-
-基础评估集问题较简单，不同检索策略的结果差异不明显。为了更好地区分检索效果，项目进一步构建了 45 条困难评估问题，覆盖同义改写、跨章节问题、干扰问题、精确定位问题、对比型问题和推理型问题。
-
-在困难评估集上，只评估检索阶段的结果如下：
-
-| Strategy | Top1 Source Hit | Top3 Source Hit | Source Keyword Coverage |
-| --- | --- | --- | --- |
-| similarity | 86.67% | 97.78% | 72.59% |
-| mmr | 86.67% | 100.00% | 71.85% |
-| hybrid | 86.67% | 100.00% | 74.81% |
-| hybrid_rerank | 91.11% | 100.00% | 76.30% |
-
-从结果可以看到，`hybrid_rerank` 在 Top1 来源命中率和关键词覆盖率上表现最好，说明 Hybrid Retrieval 负责扩大候选召回，CrossEncoder Reranker 可以进一步提升候选 chunks 的排序质量。
-
-运行检索评估：
-
-```bash
-PYTHONPATH=backend .venv/bin/python scripts/eval_retrieval.py --retrieval hybrid_rerank
-```
-
-运行完整 RAG 评估：
-
-```bash
-PYTHONPATH=backend .venv/bin/python scripts/eval_rag.py --retrieval hybrid_rerank
-```
-
 ## 快速启动
 
 ### 后端启动
@@ -279,14 +251,10 @@ PYTHONPATH=backend .venv/bin/python scripts/eval_rag.py --retrieval hybrid_reran
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env
-```
-
-填写 `.env` 中的模型 API Key 后启动服务：
-
-```bash
 uvicorn app.main:app --reload --app-dir backend
 ```
+
+启动前需要在项目根目录创建 `.env`，并填写模型 API Key。核心变量可以参考下方“环境变量”部分。
 
 后端默认地址：
 
@@ -310,8 +278,6 @@ http://localhost:5173
 
 ## 环境变量
 
-主要环境变量如下：
-
 | Name | Description |
 | --- | --- |
 | `ZHIPU_API_KEY` | 智谱 Embedding API Key |
@@ -331,41 +297,34 @@ data/      原始文档、处理后的 chunks、向量库和评估结果
 docs/      项目设计和接口说明文档
 ```
 
-## 当前效果
+## 当前状态
 
-当前项目已经完成端到端 RAG 流程，支持文档上传、知识库问答、引用来源展示和检索策略切换。
+当前项目已经完成简历版 RAG 主体能力：
 
-基础 RAG 评估结果：
-
-| Strategy | Answer Hit Rate | Source Hit Rate | Avg Latency |
-| --- | --- | --- | --- |
-| hybrid | 100.00% | 96.00% | 2874 ms |
-| hybrid_rerank | 100.00% | 96.00% | 4028 ms |
-
-困难检索评估结果：
-
-| Strategy | Top1 Source Hit | Top3 Source Hit | Source Keyword Coverage |
-| --- | --- | --- | --- |
-| similarity | 86.67% | 97.78% | 72.59% |
-| mmr | 86.67% | 100.00% | 71.85% |
-| hybrid | 86.67% | 100.00% | 74.81% |
-| hybrid_rerank | 91.11% | 100.00% | 76.30% |
+- 后端 RAG Pipeline 已跑通
+- 前端问答和来源展示已完成
+- Obsidian Markdown 笔记导入已完成
+- Markdown cleaner 已完成
+- 多种检索策略已实现
+- 检索评估集和评估脚本已完成
+- 当前 Obsidian 知识库检索 Top1 命中率最高为 97.14%
 
 ## 项目亮点
 
 - 完整实现文档入库、向量化、检索、生成和引用溯源的 RAG Pipeline
-- 支持 Query Rewrite，提升口语化问题和文档表达之间的匹配能力
-- 实现 Hybrid Retrieval，将向量检索、BM25 关键词检索和 RRF 融合结合起来
-- 引入 CrossEncoder Reranker，对候选 chunks 进行二次精排
-- 针对 PDF 解析噪声进行 Loader 对比、文本清洗、目录过滤和 metadata 增强
-- 提供轻量 Eval 脚本，对不同检索策略的来源命中率、关键词覆盖率和延迟进行对比
+- 支持 Obsidian Markdown 笔记批量导入，贴近个人知识库助手场景
+- 针对 Markdown 笔记实现专门 cleaner，减少笔记语法对检索的干扰
+- 支持多种检索策略，并通过评估结果选择当前最优策略
+- 引入 CrossEncoder Reranker、Multi Query 和 confidence 可信度评分
+- 提供可复现的轻量评估脚本，能量化对比不同检索策略的效果
 - 前后端分离实现，支持文档管理、知识库问答和来源展示
 
 ## 后续优化
 
-- 继续扩充评估集，增加更多跨文档、多跳推理和真实业务问题
-- 优化 PDF 清洗和 chunk metadata，加入章节标题等结构信息
-- 支持更多文档类型，例如 Word、Excel、网页等
-- 引入 Multi Query Retrieval，提高复杂问题召回能力
+- 扩充评估集，增加跨文档、多跳推理、反事实问题和真实使用问题
+- 对失败案例做自动分析，区分召回失败、排序失败、chunk 切分失败和标注不准
+- 基于数据类型做策略路由，例如 Markdown 笔记默认使用 `mmr`，PDF 或噪声文档使用 `hybrid_rerank`
+- 支持 heading-aware chunk，根据 Markdown 标题层级进行更自然的切分
+- 接入 Agent 项目，让 Agent 将 RAG 作为知识检索工具调用
 - 使用 pgvector 或其他生产级向量数据库
 - 接入 RAGAS / LangSmith 等工具进行更系统的 RAG 评估

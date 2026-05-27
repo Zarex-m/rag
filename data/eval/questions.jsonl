@@ -1,45 +1,35 @@
-{"question":"如果一个试验可以反复做，但每次结果事先不能确定，这类试验在概率论里叫什么？它通常有哪些特征？","expected_keywords":["随机试验","重复性","随机性"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"paraphrase"}
-{"question":"样本空间、样本点和随机事件之间是什么关系？","expected_keywords":["样本空间","样本点","随机事件"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"definition"}
-{"question":"必然事件和不可能事件分别表示什么？","expected_keywords":["必然事件","不可能事件","样本空间"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"precise"}
-{"question":"两个事件不能同时发生时，在概率论中应该称为什么关系？","expected_keywords":["互不相容","互斥","不可能事件"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"paraphrase"}
-{"question":"事件 A 的对立事件和 A 本身有什么关系？","expected_keywords":["对立事件","互不相容","必然事件"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"precise"}
-{"question":"频率和概率之间有什么联系？为什么频率可以用来估计概率？","expected_keywords":["频率","概率","稳定"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"reasoning"}
-{"question":"概率的加法公式解决什么问题？什么时候可以直接相加？","expected_keywords":["加法公式","互不相容","概率"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"formula"}
-{"question":"在已知 B 发生的前提下，A 发生的概率应该如何定义？","expected_keywords":["条件概率","P(AB)","P(B)"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"formula"}
-{"question":"乘法公式和条件概率有什么关系？","expected_keywords":["乘法公式","条件概率","P(AB)"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"relation"}
-{"question":"当一个事件可能由多个互斥原因导致时，应该用哪个公式计算它的概率？","expected_keywords":["全概率公式","划分","互不相容"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"paraphrase"}
-{"question":"贝叶斯公式适合解决什么方向的问题？它和全概率公式有什么关系？","expected_keywords":["贝叶斯公式","全概率公式","条件概率"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"relation"}
-{"question":"如何判断两个事件相互独立？独立和互不相容是不是一回事？","expected_keywords":["相互独立","P(AB)","互不相容"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"distractor"}
-{"question":"n 重伯努利试验要求每次试验满足哪些条件？","expected_keywords":["伯努利试验","独立","重复"],"expected_source":"第1章 随机事件及其概率.pdf","case_type":"precise"}
-{"question":"随机变量为什么可以理解成试验结果到实数的映射？","expected_keywords":["随机变量","样本空间","函数"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"paraphrase"}
-{"question":"离散型随机变量和连续型随机变量的核心区别是什么？","expected_keywords":["离散型随机变量","连续型随机变量","概率密度"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"comparison"}
-{"question":"分布律要成为合法的概率分布，需要满足哪两个基本条件？","expected_keywords":["分布律","非负","求和"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"precise"}
-{"question":"只有成功和失败两种结果的随机变量通常对应什么分布？","expected_keywords":["0-1分布","伯努利分布","两点分布"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"paraphrase"}
-{"question":"二项分布为什么和 n 重伯努利试验有关？","expected_keywords":["二项分布","n重伯努利","独立"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"relation"}
-{"question":"泊松分布的参数通常表示什么？它的分布律形式包含哪些关键符号？","expected_keywords":["泊松分布","λ","e"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"formula"}
-{"question":"什么条件下可以用泊松分布近似二项分布？","expected_keywords":["泊松定理","二项分布","近似"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"precise"}
-{"question":"分布函数 F(x) 的单调性、右连续性和极限性质分别是什么？","expected_keywords":["分布函数","单调","右连续"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"precise"}
-{"question":"连续型随机变量的概率密度函数本身是不是概率？应该怎样通过它求区间概率？","expected_keywords":["概率密度","积分","连续型随机变量"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"distractor"}
-{"question":"均匀分布的密度函数有什么特点？","expected_keywords":["均匀分布","概率密度","区间"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"precise"}
-{"question":"指数分布通常用哪个参数表示？它的密度函数有什么形式特征？","expected_keywords":["指数分布","λ","概率密度"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"formula"}
-{"question":"正态分布的 3σ 准则说明了什么概率现象？","expected_keywords":["正态分布","3","西格玛"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"paraphrase"}
-{"question":"求离散型随机变量函数的分布时，为什么有时要把多个概率相加？","expected_keywords":["随机变量函数","分布律","概率相加"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"reasoning"}
-{"question":"连续型随机变量函数的分布函数法通常先求什么、再做什么？","expected_keywords":["分布函数法","先求","求导"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"procedure"}
-{"question":"二维随机变量和一维随机变量相比，研究重点多了哪些内容？","expected_keywords":["二维随机变量","分量","关联"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"comparison"}
-{"question":"二维随机变量的联合分布函数 F(x,y) 表示哪个区域内的概率？","expected_keywords":["联合分布函数","X","Y"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"paraphrase"}
-{"question":"二维联合分布函数有哪些性质？和一维分布函数的性质有什么相似之处？","expected_keywords":["单调","右连续","联合分布函数"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"comparison"}
-{"question":"已知二维离散型随机变量的联合分布律，如何得到某个分量的边缘分布律？","expected_keywords":["边缘分布律","联合分布律","求和"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"procedure"}
-{"question":"边缘分布能不能唯一确定联合分布？为什么这个问题容易出错？","expected_keywords":["边缘分布","联合分布","不能确定"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"distractor"}
-{"question":"二维连续型随机变量的联合概率密度需要满足哪些基本性质？","expected_keywords":["联合概率密度","非负","积分"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"precise"}
-{"question":"从联合密度求边缘密度时，对哪个变量积分？","expected_keywords":["边缘密度","联合密度","积分"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"procedure"}
-{"question":"二维随机变量的条件分布和边缘分布有什么区别？","expected_keywords":["条件分布","边缘分布","条件"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"comparison"}
-{"question":"如何判断两个随机变量相互独立？离散型和连续型情况下分别看什么？","expected_keywords":["相互独立","联合分布","边缘分布"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"comparison"}
-{"question":"独立随机变量的最大值和最小值的分布函数分别应该怎样处理？","expected_keywords":["最大值","最小值","分布函数"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"procedure"}
-{"question":"两个独立连续型随机变量之和的密度为什么会用到卷积公式？","expected_keywords":["卷积公式","X+Y","概率密度"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"reasoning"}
-{"question":"二维随机变量函数的分布和一维随机变量函数的分布有什么联系？","expected_keywords":["随机变量函数","二维随机变量","分布"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"comparison"}
-{"question":"多个相互独立的正态随机变量做线性组合后，结果仍然服从什么分布？","expected_keywords":["正态随机变量","线性组合","正态分布"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"precise"}
-{"question":"随机变量的分布函数和二维随机变量的联合分布函数有什么区别？","expected_keywords":["分布函数","联合分布函数","二维随机变量"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"cross_chapter"}
-{"question":"事件独立性和随机变量独立性在判断形式上有什么相似点？","expected_keywords":["独立","联合分布","乘积"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"cross_chapter"}
-{"question":"如果题目只给出边缘分布，为什么还不能直接判断两个随机变量的联合行为？","expected_keywords":["边缘分布","联合分布","不能确定"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"reasoning"}
-{"question":"概率论里“由整体分布推出各个分量分布”和“由各个分量推出整体分布”哪一个总是成立？","expected_keywords":["联合分布","边缘分布","不能确定"],"expected_source":"第3章 多维随机变量及其分布.pdf","case_type":"paraphrase"}
-{"question":"为什么问“连续型随机变量取某一个点的概率”时不能直接看密度函数值？","expected_keywords":["连续型随机变量","概率密度","积分"],"expected_source":"第2章 随机变量及其分布函数.pdf","case_type":"distractor"}
+{"question":"std::unique_ptr 的核心特性是什么？为什么它不支持拷贝？","expected_keywords":["unique_ptr","独占所有权","移动语义"],"expected_source":"cpp/c++新特性/智能指针/unique_ptr.md","case_type":"cpp_smart_pointer"}
+{"question":"shared_ptr 为什么需要控制块？控制块里通常保存什么信息？","expected_keywords":["shared_ptr","控制块","引用计数"],"expected_source":"cpp/c++新特性/智能指针/shared_ptr.md","case_type":"cpp_smart_pointer"}
+{"question":"weak_ptr 主要解决什么问题？它为什么不增加引用计数？","expected_keywords":["weak_ptr","循环引用","lock"],"expected_source":"cpp/c++新特性/智能指针/weak_ptr.md","case_type":"cpp_smart_pointer"}
+{"question":"RAII 的核心思想是什么？它和智能指针资源管理有什么关系？","expected_keywords":["RAII","资源","生命周期"],"expected_source":"cpp/c++新特性/智能指针/RALL核心思想.md","case_type":"cpp_raii"}
+{"question":"std::forward 的作用是什么？为什么说它可以保留左值和右值属性？","expected_keywords":["std::forward","完美转发","左值"],"expected_source":"cpp/基础知识/forward.md","case_type":"cpp_language"}
+{"question":"std::packaged_task 和 future 之间是什么关系？","expected_keywords":["packaged_task","future","异步任务"],"expected_source":"cpp/基础知识/packaged_task&future.md","case_type":"cpp_concurrency"}
+{"question":"condition_variable 通常和什么锁配合使用？它用来解决什么并发问题？","expected_keywords":["condition_variable","unique_lock","等待"],"expected_source":"cpp/基础知识/条件变量 condition_variable.md","case_type":"cpp_concurrency"}
+{"question":"C++ Lambda 表达式的作用是什么？它为什么适合替代简单函数对象？","expected_keywords":["Lambda","匿名函数","函数对象"],"expected_source":"cpp/c++新特性/Lambda表达式.md","case_type":"cpp_language"}
+{"question":"std::bind 和 Lambda 相比有什么区别？现代 C++ 中更推荐哪个？","expected_keywords":["std::bind","Lambda","推荐"],"expected_source":"cpp/c++新特性/bind.md","case_type":"cpp_language"}
+{"question":"函数指针、函数对象和 std::function 之间有什么关系？","expected_keywords":["std::function","函数对象","可调用对象"],"expected_source":"cpp/c++新特性/function.md","case_type":"cpp_language"}
+{"question":"指针和引用有什么区别？在使用上分别有什么特点？","expected_keywords":["指针","引用","区别"],"expected_source":"cpp/基础知识/指针与引用的区别.md","case_type":"cpp_basic"}
+{"question":"epoll 主要包含哪三个基础函数？它们分别负责什么？","expected_keywords":["epoll_create","epoll_ctl","epoll_wait"],"expected_source":"cpp/网络编程/epoll/基础函数.md","case_type":"network_epoll"}
+{"question":"epoll 的 LT 和 ET 触发模式有什么区别？为什么 ET 通常要求非阻塞？","expected_keywords":["LT","ET","非阻塞"],"expected_source":"cpp/网络编程/epoll/两种触发方式.md","case_type":"network_epoll"}
+{"question":"epoll 内部为什么会用红黑树？它还维护了什么队列？","expected_keywords":["epoll","红黑树","就绪队列"],"expected_source":"cpp/网络编程/epoll/工作原理.md","case_type":"network_epoll"}
+{"question":"TCP 三次握手的目的是什么？为什么不是两次握手？","expected_keywords":["三次握手","连接","确认"],"expected_source":"cpp/网络编程/基础/三次握手和四次挥手.md","case_type":"network_tcp"}
+{"question":"TCP 粘包和拆包是什么问题？为什么基于 TCP 的应用层协议需要处理它？","expected_keywords":["粘包","拆包","TCP"],"expected_source":"cpp/网络编程/拆包& 粘包/概念.md","case_type":"network_tcp"}
+{"question":"自定义协议如何通过消息长度解决粘包和拆包问题？","expected_keywords":["消息长度","粘包","拆包"],"expected_source":"cpp/网络编程/拆包& 粘包/解决办法--自定义协议（消息长度）.md","case_type":"network_tcp"}
+{"question":"socket、bind、listen、accept、connect 这些套接字函数分别有什么作用？","expected_keywords":["socket","bind","listen"],"expected_source":"cpp/网络编程/套接字/五大基础函数.md","case_type":"network_socket"}
+{"question":"Reactor 模型中 EventLoop、Poller 和 Channel 分别承担什么角色？","expected_keywords":["EventLoop","Poller","Channel"],"expected_source":"cpp/网络编程/reactor网络模型/基础.md","case_type":"network_reactor"}
+{"question":"Muduo Reactor 基础版主要包含哪些组件？它们之间如何协作？","expected_keywords":["eventloop","poller","channel"],"expected_source":"cpp/muduo/reactor/基础版（eventloop+poller+channel）.md","case_type":"network_reactor"}
+{"question":"KMP 算法解决什么问题？next 数组表示什么含义？","expected_keywords":["KMP","next数组","前缀"],"expected_source":"数据结构与算法/KMP/KMP算法.md","case_type":"algorithm_string"}
+{"question":"归并排序的核心思想是什么？它为什么是稳定的 O(n log n) 排序？","expected_keywords":["归并排序","分治","O(n log n)"],"expected_source":"数据结构与算法/排序算法/归并排序.md","case_type":"algorithm_sort"}
+{"question":"快速排序的基本步骤是什么？它通常如何进行划分？","expected_keywords":["快速排序","基准","划分"],"expected_source":"数据结构与算法/排序算法/快速排序.md","case_type":"algorithm_sort"}
+{"question":"堆排序的基本过程是什么？为什么要先建堆？","expected_keywords":["堆排序","建堆","调整"],"expected_source":"数据结构与算法/堆结构/堆排序.md","case_type":"algorithm_heap"}
+{"question":"堆这种数据结构有什么性质？大根堆和小根堆分别表示什么？","expected_keywords":["堆","大根堆","小根堆"],"expected_source":"数据结构与算法/堆结构/堆.md","case_type":"algorithm_heap"}
+{"question":"Trie 前缀树适合解决什么问题？它如何存储字符串前缀？","expected_keywords":["Trie","前缀树","字符串"],"expected_source":"数据结构与算法/二叉树/前缀树(Trie).md","case_type":"algorithm_tree"}
+{"question":"Morris 遍历的核心思想是什么？它为什么可以做到额外空间 O(1)？","expected_keywords":["Morris","遍历","O(1)"],"expected_source":"数据结构与算法/二叉树/Morris遍历.md","case_type":"algorithm_tree"}
+{"question":"如何判断一棵树是不是搜索二叉树？","expected_keywords":["搜索二叉树","中序遍历","有序"],"expected_source":"数据结构与算法/二叉树/搜索二叉树（判断方法）.md","case_type":"algorithm_tree"}
+{"question":"AVL 树如何通过旋转保持平衡？它的查询复杂度为什么稳定？","expected_keywords":["AVL树","旋转","平衡"],"expected_source":"数据结构与算法/平衡搜索二叉树/AVL树.md","case_type":"algorithm_tree"}
+{"question":"红黑树通过哪些性质保持近似平衡？","expected_keywords":["红黑树","自平衡","O(log n)"],"expected_source":"数据结构与算法/平衡搜索二叉树/红黑树.md","case_type":"algorithm_tree"}
+{"question":"并查集主要支持哪两个操作？它适合解决什么类型的问题？","expected_keywords":["并查集","查找","合并"],"expected_source":"数据结构与算法/图/并查集.md","case_type":"algorithm_graph"}
+{"question":"Dijkstra 算法解决什么问题？它适用于什么样的边权场景？","expected_keywords":["Dijkstra","最短路径","边权"],"expected_source":"数据结构与算法/图/最短路径算法—— dijkstra算法.md","case_type":"algorithm_graph"}
+{"question":"广度优先遍历 BFS 通常使用什么数据结构？遍历过程有什么特点？","expected_keywords":["BFS","队列","广度优先"],"expected_source":"数据结构与算法/图/广度优先遍历（Bfs）.md","case_type":"algorithm_graph"}
+{"question":"动态规划一般按照什么步骤分析？为什么要定义状态转移？","expected_keywords":["动态规划","状态","转移"],"expected_source":"数据结构与算法/动态规划/步骤.md","case_type":"algorithm_dp"}
+{"question":"零钱兑换问题如何用动态规划建模？状态含义是什么？","expected_keywords":["零钱兑换","动态规划","dp"],"expected_source":"数据结构与算法/动态规划/Leetcode322. 零钱兑换.md","case_type":"algorithm_dp"}
