@@ -10,7 +10,12 @@ from app.rag.vectorstore import clear_vectorstore
 from app.services.document_service import list_raw_document_files
 from app.rag.text_cleaner import clean_text,is_valid_chunk
 
-async def ingest_document(file_path:str,document_id:str)->dict:
+async def ingest_document(
+    file_path: str,
+    document_id: str,
+    extra_metadata: dict | None = None,
+) -> dict:
+    # extra_metadata 是为 Obsidian/其他外部知识源预留的扩展口，不影响普通上传文件入库。
     path=Path(file_path)
     
     docs=load_document(str(path))
@@ -31,7 +36,21 @@ async def ingest_document(file_path:str,document_id:str)->dict:
         chunk.metadata["filename"] = path.name
         chunk.metadata["chapter"] = extract_chapter(path.name)
         chunk.metadata["content_length"] = len(chunk.page_content)
+
+        if extra_metadata:
+            # Obsidian 导入会在这里补充 source_type、vault_relative_path、tags、links 等信息。
+            chunk.metadata.update(extra_metadata)
+
         cleaned_chunks.append(chunk)
+
+    if not cleaned_chunks:
+        # 有些 Obsidian 空笔记或模板笔记清洗后没有有效内容，直接跳过，避免向量库写入空 embeddings。
+        return {
+            "document_id": document_id,
+            "status": "skipped",
+            "num_chunks": 0,
+            "vector_ids": [],
+        }
     
     vectorstore=build_vectorstore()
     

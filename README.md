@@ -29,6 +29,7 @@
 - 评估脚本：提供批量评估脚本，支持统计关键词命中率、来源命中率和平均延迟。
 - 前端交互：React + Vite 实现文档上传、知识库问答、引用来源展示等完整交互。
 - 统一 API 响应：后端接口使用统一成功/失败响应格式，并提供全局异常处理。
+- Obsidian 知识库导入：支持从本地 Obsidian Vault 扫描 Markdown 笔记入库，并保留标题、路径、标签和双链 metadata。
 
 ## 系统架构
 
@@ -86,6 +87,16 @@ flowchart TD
 ```
 
 ## RAG 流程
+
+### Obsidian Vault 导入
+
+除了通过前端上传文档，项目也支持将本地 Obsidian Vault 作为个人知识库导入：
+
+```bash
+PYTHONPATH=backend .venv/bin/python scripts/ingest_obsidian_vault.py --vault "/path/to/your/ObsidianVault" --clear
+```
+
+导入时会扫描 Vault 中的 Markdown 笔记，跳过 `.obsidian`、`.trash` 和 `.git` 等配置目录，并为每个 chunk 增加 `source_type`、`vault_name`、`vault_relative_path`、`folder`、`title`、`tags`、`links` 等 metadata，方便后续按照笔记路径、标签和双链做检索增强。
 
 ### 1. 文档入库流程
 
@@ -280,6 +291,38 @@ npm run dev
 http://localhost:5173
 ```
 
+### 检索对比实验页
+
+项目提供 Streamlit 检索对比页面，用于输入同一个问题并横向观察 `similarity`、`mmr`、`hybrid` 和 `hybrid_rerank` 的召回结果。
+
+```bash
+PYTHONPATH=backend streamlit run scripts/retrieval_lab.py
+```
+
+默认地址：
+
+```text
+http://localhost:8501
+```
+
+### Obsidian 插件
+
+项目提供一个最小可用的 Obsidian 插件入口，可以在 Obsidian 右侧面板中直接调用本地 RAG 后端进行问答。
+
+使用方式：
+
+1. 启动 FastAPI 后端，确保地址为 `http://localhost:8000`
+2. 将 `obsidian-rag-plugin/` 目录复制到 Obsidian Vault 的插件目录：
+
+```text
+<YourVault>/.obsidian/plugins/rag-assistant
+```
+
+3. 在 Obsidian 中开启 Community plugins，并启用 `RAG Assistant`
+4. 点击左侧 ribbon 图标，或者通过命令面板打开 `Open RAG Assistant`
+
+插件默认使用 `hybrid_rerank` 检索策略，并支持在插件设置中修改后端地址、检索策略和 top-k。
+
 ## 环境变量
 
 主要环境变量如下：
@@ -299,6 +342,7 @@ http://localhost:5173
 backend/   FastAPI 后端、RAG 核心逻辑和接口路由
 frontend/  React 前端页面
 scripts/   入库、检索对比和评估脚本
+obsidian-rag-plugin/  Obsidian 插件入口
 data/      原始文档、处理后的 chunks、向量库和评估结果
 docs/      项目设计和接口说明文档
 ```
@@ -321,6 +365,7 @@ docs/      项目设计和接口说明文档
 - 实现 Hybrid Retrieval，将向量检索、BM25 关键词检索和 RRF 融合结合起来
 - 引入 CrossEncoder Reranker，对候选 chunks 进行二次精排
 - 针对 PDF 解析噪声进行 Loader 对比、文本清洗、目录过滤和 metadata 增强
+- 支持 Obsidian Vault 导入和 Obsidian 插件入口，扩展到个人知识库问答场景
 - 提供轻量 Eval 脚本，对不同检索策略的命中率和延迟进行对比
 - 前后端分离实现，支持文档管理、知识库问答和来源展示
 
